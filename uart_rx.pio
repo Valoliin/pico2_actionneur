@@ -1,0 +1,12 @@
+.program uart_rx
+
+wait 0 pin 0        ; attendre start bit
+
+set x, 7
+set y, 0
+
+bitloop:
+    in pins, 1
+    jmp x-- bitloop
+
+push block

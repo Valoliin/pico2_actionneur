@@ -1,0 +1,10 @@
+.program uart_tx
+.side_set 1 opt
+
+public entry_point:
+    pull block       side 1      ; Attend la donnée, ligne à 1 au repos
+    set x, 7         side 0  [7] ; START bit (0) -> 8 cycles (1 set + 7 delay)
+bitloop:
+    out pins, 1              [6] ; Data bit -> 7 cycles
+    jmp x-- bitloop              ; + 1 cycle pour le jump = 8 cycles total
+    set pins, 1      side 1  [7] ; STOP bit (1) -> 8 cycles
