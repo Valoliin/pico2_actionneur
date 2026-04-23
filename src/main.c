@@ -77,7 +77,7 @@ int main()
     while (rmw_uros_ping_agent(100, 1) != RCL_RET_OK)
     {
         gpio_put(LED_PIN, !gpio_get(LED_PIN));
-        sleep_ms(250);
+        sleep_ms(100);
     }
 
     // 3. Init ROS 2
