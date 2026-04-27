@@ -48,17 +48,24 @@ void timer_callback(rcl_timer_t *timer, int64_t last_call_time)
 int main()
 {
     // 0. Configuration de l'horloge pour Pico 2 (RP2350)
-    set_sys_clock_khz(150000, true);
+    set_sys_clock_khz(150000, true);    // 150MHz
     stdio_init_all();
 
     // 1. Initialisation de ton matériel (LX16 et Pompes)
     lx16_init();
-    periph_init(); // Initialise tes pins DRV8833 pour les pompes
+    periph_init(); // Initialise tes pins DRV8833 pour les pompes et électrovannes
 
     // On active les moteurs (LOAD)
-    lx16_load(SERVO_BRAS);
-    lx16_load(SERVO_PINCE);
-
+    lx16_load(ID_CURSEUR_D);
+    lx16_load(ID_CURSEUR_G);
+    lx16_load(ID_LEVE_DD);
+    lx16_load(ID_LEVE_DC);
+    lx16_load(ID_LEVE_GC);
+    lx16_load(ID_LEVE_GG);
+    lx16_load(ID_TOURNE_DD);
+    lx16_load(ID_TOURNE_DC);
+    lx16_load(ID_TOURNE_GC);
+    lx16_load(ID_TOURNE_GG);
     // 2. Configuration micro-ROS (UART1 pour l'agent)
     uart_init(uart1, 115200);
     gpio_set_function(8, GPIO_FUNC_UART);

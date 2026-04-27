@@ -7,10 +7,10 @@ static PIO _pio = pio0;
 static uint _sm = 0;
 
 void lx16_init()
-{
-    gpio_init(SENS_PIN);
-    gpio_set_dir(SENS_PIN, GPIO_OUT);
-    gpio_put(SENS_PIN, 0); // Mode lecture par défaut
+{       // initialisation du bus des servomoteurs LX16A
+    gpio_init(SENS_PIN);                // on utilise un signal de sens deu dialogue
+    gpio_set_dir(SENS_PIN, GPIO_OUT);   // c'est une sortie
+    gpio_put(SENS_PIN, 0);              // Mode lecture par défaut
 
     uint offset = pio_add_program(_pio, &uart_tx_program);
     pio_sm_config c = uart_tx_program_get_default_config(offset);
@@ -26,7 +26,7 @@ void lx16_init()
 }
 
 static uint8_t calc_checksum(uint8_t *buf)
-{
+{       // calcule le caractère de détection d'erreur de cette trame
     uint16_t temp = 0;
     for (uint8_t i = 2; i < buf[3] + 2; i++)
         temp += buf[i];
@@ -34,7 +34,7 @@ static uint8_t calc_checksum(uint8_t *buf)
 }
 
 static void send_packet(uint8_t *buf, uint8_t len)
-{
+{       // envoi d'une trame au servomoteur
     gpio_put(SENS_PIN, 1); // EMET
     sleep_us(5);
     for (int i = 0; i < len; i++)
@@ -46,14 +46,14 @@ static void send_packet(uint8_t *buf, uint8_t len)
 }
 
 void lx16_move(uint8_t id, int16_t position, uint16_t time)
-{
+{       // met l'orintation du servomoteur de cette adresse à la position et dans le temps donnés
     uint8_t buf[10] = {0x55, 0x55, id, 7, 1, position & 0xFF, position >> 8, time & 0xFF, time >> 8, 0};
     buf[9] = calc_checksum(buf);
     send_packet(buf, 10);
 }
 
 void lx16_load(uint8_t id)
-{
+{       // met en service le servomoteur de cette adresse
     uint8_t buf[7] = {0x55, 0x55, id, 4, 31, 1, 0};
     buf[6] = calc_checksum(buf);
     send_packet(buf, 7);
