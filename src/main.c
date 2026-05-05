@@ -21,9 +21,19 @@ const uint LED_PIN = 25;
 
 // Objets micro-ROS
 rcl_publisher_t publisher;
+rcl_publisher_t pos_publisher;
 rcl_subscription_t subscriber;
 std_msgs__msg__Int32 msg_pub;
+std_msgs__msg__Int32 pos_msg;
 std_msgs__msg__Int32 msg_sub;
+
+// Fonction de publication (appelée par lx16_read_pos)
+void publish_servo_pos(uint8_t id, int16_t pos)
+{
+    // On encode l'ID sur les 16 bits de poids fort, et la position sur les 16 bits de poids faible
+    pos_msg.data = (int32_t)((id << 16) | (pos & 0xFFFF));
+    rcl_publish(&pos_publisher, &pos_msg, NULL);
+}
 
 // Callback pour les commandes reçues (ex: depuis une tablette ou un PC)
 void subscription_callback(const void *msin)
@@ -66,6 +76,8 @@ int main()
     lx16_load(ID_TOURNE_DC);
     lx16_load(ID_TOURNE_GC);
     lx16_load(ID_TOURNE_GG);
+    sleep_ms(500);
+
     // 2. Configuration micro-ROS (UART1 pour l'agent)
     uart_init(uart1, 115200);
     gpio_set_function(8, GPIO_FUNC_UART);
@@ -106,6 +118,12 @@ int main()
         &publisher, &node,
         ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
         "pico_status");
+
+    // Publisher (Position des servos)
+    rclc_publisher_init_default(
+        &pos_publisher, &node,
+        ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32),
+        "pico/pos_servo");
 
     // Subscriber (Commandes d'actions)
     rclc_subscription_init_default(
