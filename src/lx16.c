@@ -69,7 +69,7 @@ static void send_packet(uint8_t *buf, uint8_t len)
         pio_sm_put_blocking(_pio, _sm, buf[i]);
     while (!pio_sm_is_tx_fifo_empty(_pio, _sm))
         ;
-    sleep_us(100);
+    sleep_us(500);
     gpio_put(SENS_PIN, 0); // LIT
 }
 
