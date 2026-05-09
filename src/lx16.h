@@ -52,10 +52,11 @@
 #define ACTIF_TOURNE_GG 880 // !
 
 // DIFFERENTES POSITIONS DES SERVOS MANIPULANT LES CURSEURS   A CALIBRER  !!
-#define REPOS_CURSEUR_D 425 // non paramétré car pas disponible ...
-#define ACTIF_CURSEUR_D 800 // non paramétré car pas disponible ...
-#define REPOS_CURSEUR_G 800
-#define ACTIF_CURSEUR_G 425
+// ces deux servos ont été programmés pour n'accepter dévoluer qu'entre 350 et 840 !
+#define REPOS_CURSEUR_D 400   // !    en haut
+#define ACTIF_CURSEUR_D 800   // !    baissé
+#define REPOS_CURSEUR_G 800   // !    en haut
+#define ACTIF_CURSEUR_G 425   // !    baissé
 
 void lx16_init();
 void lx16_load(uint8_t id);
