@@ -14,12 +14,10 @@
 #include <stdbool.h>
 
 // signaux actionnant les pompes 
-#define POMPES_A_IN1 10   // un seul signal qui commande les deux voies du DRV8833
-#define POMPES_A_IN2 11
+#define POMPES 17   // un seul signal IN1 qui commande les deux voies du DRV8833
 
 // signaux actionnant les électrovannes
-#define VANNES_A_IN1 12   // un seul signal qui commande la voie du DRV8833 vers les 4 électrovannes
-#define VANNES_A_IN2 13
+#define VANNES 16   // un seul signal IN1qui commande la voie du DRV8833 vers les 4 électrovannes
 
 void periph_init();
 void pompes_set(bool etat);  // si etat = vrai on aspire
